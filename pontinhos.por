@@ -1,4 +1,6 @@
 programa {
+	inclua biblioteca Arquivos
+	inclua biblioteca Util 	//aguarde(inteiro intervalo) e sorteia(inteiro minimo, inteiro maximo)
 	caracter tabuleiro[][] = 	{{' ', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 								,{'1', '+', ' ', '+', ' ', '+', ' ', '+', ' ', '+'}
 								,{'2', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
@@ -79,7 +81,10 @@ programa {
 		}
 		retorne falso
 	}
+
+	
 	funcao carregar_jogo() {
+		Arquivos.abrir_arquivo("save", Arquivos.MODO_LEITURA)
 		
 	}
 	
@@ -94,7 +99,11 @@ programa {
 			escreva("#############################\n")
 			escreva("##                         ##\n")
 			escreva("##     1) Novo Jogo        ##\n")
-			escreva("##                         ##\n")
+			se (Arquivos.arquivo_existe("save")) {
+				escreva("##     2) Carregar Jogo    ##\n")
+			} senao {
+				escreva("##                         ##\n")
+			}
 			escreva("##     0) Sair             ##\n")
 			escreva("##                         ##\n")
 			escreva("#############################\n")
@@ -164,11 +173,23 @@ programa {
 
 	funcao inteiro jogar_maquina() {
 		inteiro opcao = 1
+		const inteiro jogadas[] = {12, 14, 16, 18,
+										21, 23, 25, 27, 29,
+										32, 34, 36, 38,
+										41, 43, 45, 47, 49,
+										52, 54, 56, 58,
+										61, 63, 65, 67, 69,
+										72, 74, 76, 78,
+										81, 83, 85, 87, 89,
+										92, 94, 96, 98}
 		desenhar_jogo()
 		
 		escreva("\n-- Jogador máquina --\n")
 		escreva("Entre com uma posição (0 pra salvar e sair): ")
-		leia(opcao)
+		opcao = jogadas[Util.sorteia(0, 39)]
+		Util.aguarde(1000)
+		escreva(opcao, "\n")
+		Util.aguarde(2000)
 
 		logico jogada = falso
 		faca {
@@ -176,7 +197,10 @@ programa {
 				jogada = jogar(opcao, "máquina")
 				se (nao jogada) {
 					escreva("Jogada inválida, favor escolher outra posição: ")
-					leia(opcao)
+					opcao = jogadas[Util.sorteia(0, 39)]
+					Util.aguarde(1000)
+					escreva(opcao, "\n")
+					Util.aguarde(2000)
 				}
 			} senao {
 				jogada = verdadeiro
@@ -227,5 +251,6 @@ programa {
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1640; 
+ * @POSICAO-CURSOR = 5346; 
+ * @DOBRAMENTO-CODIGO = [126, 150];
  */
