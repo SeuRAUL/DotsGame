@@ -1,6 +1,8 @@
 programa {
 	inclua biblioteca Arquivos
-	inclua biblioteca Util 	//aguarde(inteiro intervalo) e sorteia(inteiro minimo, inteiro maximo)
+	inclua biblioteca Util
+	inclua biblioteca Tipos
+	
 	caracter tabuleiro[][] = 	{{' ', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 								,{'1', '+', ' ', '+', ' ', '+', ' ', '+', ' ', '+'}
 								,{'2', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
@@ -82,9 +84,31 @@ programa {
 		retorne falso
 	}
 
+	funcao salvar_jogo(logico turno) {
+		inteiro save = Arquivos.abrir_arquivo("save.txt", Arquivos.MODO_ESCRITA)
+		Arquivos.escrever_linha("# Pontos humano", save)
+		Arquivos.escrever_linha( Tipos.inteiro_para_cadeia(pontos_humano, 10) , save)
+
+		Arquivos.escrever_linha("# Pontos máquina", save)
+		Arquivos.escrever_linha( Tipos.inteiro_para_cadeia(pontos_maquina, 10) , save)
+
+		Arquivos.escrever_linha("# Turno", save)
+		Arquivos.escrever_linha( Tipos.logico_para_cadeia(turno) , save)
+
+		Arquivos.escrever_linha("# Tabuleiro", save)
+		para (inteiro i = 0; i < 10; i++) {
+			para (inteiro j = 0; j < 10; j++) {
+				Arquivos.escrever_linha( Tipos.caracter_para_cadeia(tabuleiro[i][j]), save)
+			}
+		}
+
+		Arquivos.fechar_arquivo(save)
+
+		retorne
+	}
 	
 	funcao carregar_jogo() {
-		Arquivos.abrir_arquivo("save", Arquivos.MODO_LEITURA)
+		Arquivos.abrir_arquivo("save.txt", Arquivos.MODO_LEITURA)
 		
 	}
 	
@@ -99,7 +123,7 @@ programa {
 			escreva("#############################\n")
 			escreva("##                         ##\n")
 			escreva("##     1) Novo Jogo        ##\n")
-			se (Arquivos.arquivo_existe("save")) {
+			se (Arquivos.arquivo_existe("save.txt")) {
 				escreva("##     2) Carregar Jogo    ##\n")
 			} senao {
 				escreva("##                         ##\n")
@@ -115,6 +139,7 @@ programa {
 			}
 			senao se ( opcao == 2) {
 				carregar_jogo()
+				retorne 2
 			}
 			senao se (opcao == 0) {
 				retorne 0
@@ -208,7 +233,7 @@ programa {
 		} enquanto(nao jogada)
 		retorne opcao
 	}
-
+	
 	funcao inicio() {
 		const logico HUMANO = verdadeiro
 		const logico MAQUINA = falso
@@ -218,30 +243,38 @@ programa {
 		
 
 		enquanto (opcao != 0 e (pontos_humano + pontos_maquina < 16) e (pontos_humano < 9 e pontos_maquina < 9)) {
-			//desenhar_jogo()
 
 			//turnos
 			se (turno) {
 				opcao = jogar_humano()
+				se (opcao == 0) { salvar_jogo(turno) }
 				turno = MAQUINA
 			} senao {
 				opcao = jogar_maquina()
+				se (opcao == 0) { salvar_jogo(turno) }
 				turno = HUMANO
 			}
 	
 			
 		}
-		// salvar jogo e sair
+		
 
+		se ((pontos_humano + pontos_maquina > 15) ou (pontos_humano > 8 ou pontos_maquina > 8)) {
+			escreva ("\n")
+			se (pontos_humano > pontos_maquina) {
+				escreva("Vitória do JOGADOR HUMANO!\n")
+			} senao se (pontos_humano < pontos_maquina) {
+				escreva("Vitória do JOGADOR MÁQUINA!\n")
+			} senao {
+				escreva("EMPATE!\n")
+			}
 
-		escreva ("\n")
-		se (pontos_humano > pontos_maquina) {
-			escreva("Vitória do JOGADOR HUMANO!\n")
-		} senao se (pontos_humano < pontos_maquina) {
-			escreva("Vitória do JOGADOR MÁQUINA!\n")
-		} senao {
-			escreva("EMPATE!\n")
+			Arquivos.apagar_arquivo("save.txt")
 		}
+		
+
+
+		
 		
 	}
 
@@ -251,6 +284,6 @@ programa {
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 5729; 
- * @DOBRAMENTO-CODIGO = [126, 150];
+ * @POSICAO-CURSOR = 3423; 
+ * @DOBRAMENTO-CODIGO = [20, 40, 59, 86, 114, 151, 175, 198];
  */
