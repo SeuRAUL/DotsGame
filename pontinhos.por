@@ -217,7 +217,7 @@ programa {
 		inteiro opcao = desenhar_inicio()
 		
 
-		enquanto (opcao != 0 e (pontos_humano + pontos_maquina < 16)) {
+		enquanto (opcao != 0 e (pontos_humano + pontos_maquina < 16) e (pontos_humano < 9 e pontos_maquina < 9)) {
 			//desenhar_jogo()
 
 			//turnos
@@ -251,6 +251,6 @@ programa {
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 5346; 
+ * @POSICAO-CURSOR = 5729; 
  * @DOBRAMENTO-CODIGO = [126, 150];
  */
