@@ -17,6 +17,10 @@ programa {
 	inteiro pontos_humano = 0
 	inteiro pontos_maquina = 0
 
+	const logico HUMANO = verdadeiro
+	const logico MAQUINA = falso
+	logico turno = HUMANO
+
 
 	funcao logico pontua(inteiro linha, inteiro coluna, cadeia jogador) {
 		logico pontuou = falso
@@ -84,7 +88,7 @@ programa {
 		retorne falso
 	}
 
-	funcao salvar_jogo(logico turno) {
+	funcao salvar_jogo() {
 		inteiro save = Arquivos.abrir_arquivo("save.txt", Arquivos.MODO_ESCRITA)
 		Arquivos.escrever_linha("# Pontos humano", save)
 		Arquivos.escrever_linha( Tipos.inteiro_para_cadeia(pontos_humano, 10) , save)
@@ -108,7 +112,26 @@ programa {
 	}
 	
 	funcao carregar_jogo() {
-		Arquivos.abrir_arquivo("save.txt", Arquivos.MODO_LEITURA)
+		inteiro save = Arquivos.abrir_arquivo("save.txt", Arquivos.MODO_LEITURA)
+
+		Arquivos.ler_linha(save) // # pontos humano
+		pontos_humano = Tipos.cadeia_para_inteiro( Arquivos.ler_linha(save), 10 )
+
+		Arquivos.ler_linha(save) // # pontos máquina
+		pontos_maquina = Tipos.cadeia_para_inteiro( Arquivos.ler_linha(save), 10 )
+
+		Arquivos.ler_linha(save) // # turno
+		turno = Tipos.cadeia_para_logico( Arquivos.ler_linha(save) )
+
+		Arquivos.ler_linha(save) // # tabuleiro
+		para (inteiro i = 0; i < 10; i++) {
+			para (inteiro j = 0; j < 10; j++) {
+				 tabuleiro[i][j] = Tipos.cadeia_para_caracter( Arquivos.ler_linha(save) ) 
+			}
+		}
+
+		//Arquivos.apagar_arquivo("save.txt")
+		Arquivos.fechar_arquivo(save)
 		
 	}
 	
@@ -235,9 +258,6 @@ programa {
 	}
 	
 	funcao inicio() {
-		const logico HUMANO = verdadeiro
-		const logico MAQUINA = falso
-		logico turno = HUMANO
 
 		inteiro opcao = desenhar_inicio()
 		
@@ -247,11 +267,11 @@ programa {
 			//turnos
 			se (turno) {
 				opcao = jogar_humano()
-				se (opcao == 0) { salvar_jogo(turno) }
+				se (opcao == 0) { salvar_jogo() }
 				turno = MAQUINA
 			} senao {
 				opcao = jogar_maquina()
-				se (opcao == 0) { salvar_jogo(turno) }
+				se (opcao == 0) { salvar_jogo() }
 				turno = HUMANO
 			}
 	
@@ -284,6 +304,6 @@ programa {
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 3423; 
- * @DOBRAMENTO-CODIGO = [20, 40, 59, 86, 114, 151, 175, 198];
+ * @POSICAO-CURSOR = 3836; 
+ * @DOBRAMENTO-CODIGO = [24, 44, 63, 137, 174, 198, 221];
  */
